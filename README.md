@@ -34,14 +34,14 @@ Use this package to prepare datasets and build models as well as deploy, monitor
     User data upload:
 
 
-    ****2.1 Without geocoding required****
+    2.1 ****Without geocoding required****
     ```bash
     
     dataset_id = result.create_dataset(df, dataset_name ='test_dataset' ,dv_col = 'dv_90', dv_positive = '1',latitude_col = "geo_latitude" ,
           longitude_col = "geo_longitude",unique_col = 'geoiq_identifier_col',geocoding = 'F',
           address_col = '\'\'', pincode_col = '\'\'' , additional_vars = '[]')
     ```
-    ****2.2 Geocoding required****
+    2.2 ****Geocoding required****
     ```bash
     
     dataset_id = result.create_dataset(df, dataset_name ='test_dataset' ,dv_col = 'dv_90', dv_positive = '1',latitude_col = "" ,
@@ -67,11 +67,18 @@ Use this package to prepare datasets and build models as well as deploy, monitor
      width="80" 
      height="80"></p>
 
-    This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
+    Exploratory Data Analysis, or EDA, is an important step in any Data Analysis or Data Science project. We provide the detail investigation on the uploaded dataset to discover patterns, and anomalies (outliers), and form hypotheses based on our understanding of the dataset. 
 
     ```bash
-    python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
+    result.eda(dataset_id)
     ```
+    ```bash
+    ## Returned columns
+    
+    'column_name', 'column_type', 'iv', 'auc_1', 'auc_2', 'auc_3', 'bins', 'catchment', 'category', 'F_test_pvalue', 'T_test_pvalue', 'desc_name',
+    'description', 'deviation', 'direction', 'id', 'ks', 'major_category', 'max_ks', 'mean', 'name', 'normalization_level',
+    'normalization_level_id', 'roc', 'sd', 'sub_category_name', 'unique', 'unique_count', 'variable', 'vhm_hierarchy_id'
+     ```
     
 5. **Train a model**<p align="left">
 <img src="https://automl.geoiq.io/static/media/train.6fddcfa4.svg" 
@@ -117,67 +124,12 @@ Use this package to prepare datasets and build models as well as deploy, monitor
 ## See [demo.ipynb](https://github.com/jingtt/varclushi/blob/master/demo.ipynb) for more details.
 
 
-```python
-import pandas as pd
-from varclushi import VarClusHi
-```
-
-Create a VarClusHi object and pass the dataframe (df) to be analyzed as a parameter, you can also specify 
-- a feature list (feat_list, default all columns of df)
-- max second eigenvalue (maxeigval2, default 1)
-- max clusters (maxclus, default None)
-
-Then call method varclus(), which performs hierachical variable clustering algorithm
-
-```python
-demo1_df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv', sep=';')
-demo1_df.drop('quality',axis=1,inplace=True)
-demo1_vc = VarClusHi(demo1_df,maxeigval2=1,maxclus=None)
-demo1_vc.varclus()
-```
-```
-<varclushi.varclushi.VarClusHi at 0x15f96e35e10>
-```
-Call info, you can get the number of clusters, number of variables in each cluster (N_vars), variance explained by each cluster (Eigval1), etc.
-
-```python
-demo1_vc.info
-```
-```python
-  Cluster N_Vars   Eigval1   Eigval2   VarProp
-0       0      3  2.141357  0.658413  0.713786
-1       1      3  1.766885  0.900991  0.588962
-2       2      2  1.371260  0.628740  0.685630
-3       3      2  1.552496  0.447504  0.776248
-4       4      1  1.000000  0.000000  1.000000
-```
-
-Call rsquare, you can get the (1 - rsquare) ratio of each variable
-
-```python
-demo1_vc.rsquare
-```
-
-```python
-   Cluster              Variable    RS_Own     RS_NC  RS_Ratio
-0        0         fixed acidity  0.882210  0.277256  0.162976
-1        0               density  0.622070  0.246194  0.501362
-2        0                    pH  0.637076  0.194359  0.450478
-3        1   free sulfur dioxide  0.777796  0.010358  0.224530
-4        1  total sulfur dioxide  0.786660  0.042294  0.222761
-5        1        residual sugar  0.202428  0.045424  0.835525
-6        2             sulphates  0.685630  0.106022  0.351653
-7        2             chlorides  0.685630  0.048903  0.330534
-8        3           citric acid  0.776248  0.398208  0.371810
-9        3      volatile acidity  0.776248  0.040920  0.233299
-10       4               alcohol  1.000000  0.082055  0.000000
-```
-
-
 
 ## More resources
 
-    You can find our Data Catalogue [here](https://catalog.geoiq.io/in).
+    You can find our AutoML FAQ Page [here](https://geoiq.io/products/no-code-ml) and our Data Cataloguie [here](https://catalog.geoiq.io/in).
+
+    
 
 
 ## Contact us

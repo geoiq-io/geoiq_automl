@@ -1,3 +1,5 @@
+![GeoIQ Automl package](https://geoiq.io/_next/image?url=%2Fimages%2Flogo.svg&w=256&q=75)
+
 # iggy-enrich-python
 
 [Iggy](http://www.askiggy.com) makes it easy for data scientists and machine learning engineers to include location-specific features in their models and analyses. 

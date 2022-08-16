@@ -1,30 +1,82 @@
 ![GeoIQ Automl package](https://geoiq.io/_next/image?url=%2Fimages%2Flogo.svg&w=256&q=75)
 
-# iggy-enrich-python
+# GeoIQ-automl-python
 
-[Iggy](http://www.askiggy.com) makes it easy for data scientists and machine learning engineers to include location-specific features in their models and analyses. 
+[GeoIQ’s](https://geoiq.io/) ML python package makes it easy for data scientists and machine learning engineers to train your machine learning models at scale, evaluate your trained model, and use the model to make predictions and gain a better understanding of your data.
 
-This package helps Iggy data users to enrich the points (i.e. latitude/longitude pairs), census boundaries, and zipcodes in their data with Iggy features using Python.
+This package also helps geoiq data users to enrich the points (i.e. latitude/longitude pairs), census boundaries, and zipcodes in their data with geoiq features using Python.
+
+Use this package to prepare datasets and build models as well as deploy, monitor and manage your models in production. 
 
 ## Getting started
 
-1. **Get Iggy data.** Please request access [here](https://docs.askiggy.com/download/sample-data) and we'll immediately send you a link to some sample data to play around with. 
-
-    What you'll receive is a sample data file in `.tar.gz` format. Un-compress it in a location of your choosing, for example:
-    
-    ```bash
-    tar -xzvf iggy-package-wkt-<iggy_version_id>_<iggy_prefix>.tar.gz
-    ```
-
-2. **Install this library and dependencies.**
+1. **Installation** 
 
     Install via pip:
 
     ```bash
-    pip install iggyenrich
+    pip install git+https://github.com/geoiq-io/geoiq_automl.git
+    ```
+    
+    ```bash
+    import geoiq_automl
+    #### AutoML object
+    result = geoiq_automl.automl('API KEY')
+    ```
+    
+   
+    
+2. **Data Upload** <p align="left">
+<img src="https://automl.geoiq.io/static/media/add-dataset.1bde6b66.svg" 
+     width="80" 
+     height="80"></p>
+
+    User data upload:
+
+
+    ****2.1 Without geocoding required****
+    ```bash
+    
+    dataset_id = result.create_dataset(df, dataset_name ='test_dataset' ,dv_col = 'dv_90', dv_positive = '1',latitude_col = "geo_latitude" ,
+          longitude_col = "geo_longitude",unique_col = 'geoiq_identifier_col',geocoding = 'F',
+          address_col = '\'\'', pincode_col = '\'\'' , additional_vars = '[]')
+    ```
+    ****2.2 Geocoding required****
+    ```bash
+    
+    dataset_id = result.create_dataset(df, dataset_name ='test_dataset' ,dv_col = 'dv_90', dv_positive = '1',latitude_col = "" ,
+          longitude_col = "",unique_col = 'geoiq_identifier_col',geocoding = 'T',
+          address_col = 'complete_address', pincode_col = 'pin_code_name' , additional_vars = '[]')
     ```
 
-3. **Enrich some data!**
+3. **Data Enrichment!**<p align="left">
+<img src="https://cdn-icons-png.flaticon.com/512/300/300864.png" 
+     width="60" 
+     height="60"></p>
+
+    The easiest way to enrich a file like this (with *all* the available GeoIQ features) is by running:
+
+    ```bash
+    result.data_enrichment(dataset_id,['p_retail_es_pt_500','mat_wall_mud_unbrnt_brck_perc_500','p_health_hp_np_1000'])
+    ```
+
+    S3 bucket link will be returned, in which you have your un-compressed GeoIQ data.
+    
+4. **Exploratory Data Analysis**<p align="left">
+<img src="https://automl.geoiq.io/static/media/compare.4f516f22.svg" 
+     width="80" 
+     height="80"></p>
+
+    This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
+
+    ```bash
+    python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
+    ```
+    
+5. **Train a model**<p align="left">
+<img src="https://automl.geoiq.io/static/media/train.6fddcfa4.svg" 
+     width="80" 
+     height="80"></p>
 
     This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
 
@@ -32,143 +84,106 @@ This package helps Iggy data users to enrich the points (i.e. latitude/longitude
     python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
     ```
 
-    ...where `<iggy_base_loc>` is the local directory or S3 bucket in which you have your un-compressed Iggy data, and `<iggy_version_id>` is the version of Iggy data you have (something like `"20211110214810"`).
-    
-    After a few seconds you'll find an "enriched" version of the file in `sample_data/enriched_pinellas_711s.csv` containing its original 24 data rows, but the number of columns has exploded from the original 7 to 2,808. These extra ~2,800 columns contain Iggy features.
+6. **Evaluate a model**<p align="left">
+<img src="https://automl.geoiq.io/static/media/evaluate.dbfee37d.svg" 
+     width="80" 
+     height="80"></p>
 
-## Examples
+    This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
 
-If you want to use `IggyEnrich` within your own code, here are a few things you can do:
+    ```bash
+    python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
+    ```
+7. **Prediction from a model**<p align="left">
+<img src="https://cdn-icons-png.flaticon.com/512/300/300834.png" 
+     width="60" 
+     height="60"></p>
 
-### Create a Local Iggy Data Package
+    This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
 
-This repo assumes that you have your Iggy data saved locally or on s3, and want to load it into memory to do your enrichment. 
-
-To do this, you'll first want to create an instance of a `LocalIggyDataPackage` object, which loads the data from disk or s3:
-
-```python
-from iggyenrich.iggy_data_package import LocalIggyDataPackage
-
-pkg_spec = {
-    "iggy_version_id": "{your iggy version id}",
-    "crosswalk_prefix": "{your iggy crosswalk prefix}",
-    "base_loc": "{your iggy data base location on disk or s3 bucket}",
-    "iggy_prefix": "{your data's iggy prefix}"
-}
-pkg = LocalIggyDataPackage(**pkg_spec)
-```
-
-You'll notice that the `pkg_spec` includes a couple parameters you need to specify. These depend on the Iggy data package you've downloaded or put in an s3 bucket. If you look at one of these packages, you'll see that it has a parent directory like:
-
-`/<base_loc>/iggy-package-wkt-<iggy_version_id>_<iggy_prefix>/`
-
-e.g.
-
-- `/Users/iggy/data/iggy-package-wkt-20211110214810_fl_pinellas_quadkeys`, in which case `base_loc="/Users/iggy/data"` and `iggy_version_id="20211110214810"` and `iggy_prefix="fl_pinellas_quadkeys"`, or
-
-- `s3://iggy-bucket/data/iggy-package-wkt-20211110214810_fl_pinellas_quadkeys`, in which case `base_loc="s3://iggy-bucket/data"` and `iggy_version_id="20211110214810"` and `iggy_prefix="fl_pinellas_quadkeys"`, or
+    ```bash
+    python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
 
 
-Within that parent directory will be one or more crosswalk files with a name like:
-
-`/<crosswalk_prefix>_<iggy_version_id>/000000000000.snappy.parquet`
-
-You can specify `iggy_version_id`, `crosswalk_prefix`, `base_loc`, and `iggy_prefix` based on these naming conventions.
-
-Now, once your package is set up, you can bundle it with `IggyEnrich` and load the data:
-
-```python
-from iggyenrich.iggy_enrich import IggyEnrich
-
-iggy = IggyEnrich(iggy_package=pkg)
-iggy.load()
-```
-
-### Choose specific boundaries+features 
-
-What if I don't want to enrich my data with *all* of Iggy's features, but rather want to select a few specific boundaries or features? (See our [Data README](https://www.askiggy.com/place-data-readme) and [Data Dictionary](https://docs.askiggy.com/reference/data-dictionary)) for what's available.)
+# Example
 
 
-You can narrow things down by specifing what you want when calling `load()`:
+ 
 
-```python
-selected_features = [
-    "area_sqkm_qk_isochrone_walk_10m",
-    "population_qk_isochrone_walk_10m",
-    "poi_count_per_capita_qk_isochrone_walk_10m",
-    "poi_count_qk_isochrone_walk_10m",
-]
-selected_boundaries = ["cbg"]
 
-iggy.load(boundaries=selected_boundaries, features=selected_features)
-```
 
-This will load *all* features corresponding to the `cbg` boundary, plus the four selected features corresponding to the `isochrone_walk_10m` boundary.
 
-### Enrich a DataFrame with columns for lat/lng
 
-Let's assume you have a pandas `DataFrame` containing columns with latitude and longitude. You can enrich it with your chosen Iggy features:
+## See [demo.ipynb](https://github.com/jingtt/varclushi/blob/master/demo.ipynb) for more details.
+
 
 ```python
 import pandas as pd
-
-df = pd.read_csv('sample_data/pinellas_711s.csv')
-enriched_df = iggy.enrich_df(df, latitude_col="latitude", longitude_col="longitude")
+from varclushi import VarClusHi
 ```
 
-### Enrich a GeoDataFrame
+Create a VarClusHi object and pass the dataframe (df) to be analyzed as a parameter, you can also specify 
+- a feature list (feat_list, default all columns of df)
+- max second eigenvalue (maxeigval2, default 1)
+- max clusters (maxclus, default None)
 
-If you prefer working in GeoPandas, the `enrich_df` function can take a `GeoDataFrame` too:
+Then call method varclus(), which performs hierachical variable clustering algorithm
 
 ```python
-import geopandas as gpd
-gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude), crs="WGS84")
-enriched_gdf = iggy.enrich_df(gdf)
+demo1_df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv', sep=';')
+demo1_df.drop('quality',axis=1,inplace=True)
+demo1_vc = VarClusHi(demo1_df,maxeigval2=1,maxclus=None)
+demo1_vc.varclus()
 ```
-
-### Enrich a DataFrame with census boundaries or zipcodes
-
-What if you don't have point coordinates in your data, but you do have zip codes, census block groups, census tracts, counties, or census-based statistical areas?
-
-You can enrich based on these columns as follows (using zip codes as an example):
+```
+<varclushi.varclushi.VarClusHi at 0x15f96e35e10>
+```
+Call info, you can get the number of clusters, number of variables in each cluster (N_vars), variance explained by each cluster (Eigval1), etc.
 
 ```python
-import pandas as pd
-
-df = pd.read_csv('sample_data/pinellas_711s.csv')
-enriched_df = iggy.enrich_df(df, zipcode_col="zip")
+demo1_vc.info
+```
+```python
+  Cluster N_Vars   Eigval1   Eigval2   VarProp
+0       0      3  2.141357  0.658413  0.713786
+1       1      3  1.766885  0.900991  0.588962
+2       2      2  1.371260  0.628740  0.685630
+3       3      2  1.552496  0.447504  0.776248
+4       4      1  1.000000  0.000000  1.000000
 ```
 
-These are the specific boundary types and formats supported by `IggyEnrich`:
+Call rsquare, you can get the (1 - rsquare) ratio of each variable
 
-| boundary type | `enrich_df` parameter | format | example |
-| --- | --- | --- | -- |
-| Census Block Group | `census_block_group_col` | 12-digit GEOID | `121030269131` |
-| Census Tract | `census_tract_col` | 11-digit GEOID | `12103026913` |
-| Zip Code | `zipcode_col` | 5-digit zip | `33763` |
-| County | `county_col` | 5-digit county FIPS code | `12103` |
-| Census-Based Statistical Area | `metro_col` | 5-digit CBSA GEOID | `45300` |
+```python
+demo1_vc.rsquare
+```
+
+```python
+   Cluster              Variable    RS_Own     RS_NC  RS_Ratio
+0        0         fixed acidity  0.882210  0.277256  0.162976
+1        0               density  0.622070  0.246194  0.501362
+2        0                    pH  0.637076  0.194359  0.450478
+3        1   free sulfur dioxide  0.777796  0.010358  0.224530
+4        1  total sulfur dioxide  0.786660  0.042294  0.222761
+5        1        residual sugar  0.202428  0.045424  0.835525
+6        2             sulphates  0.685630  0.106022  0.351653
+7        2             chlorides  0.685630  0.048903  0.330534
+8        3           citric acid  0.776248  0.398208  0.371810
+9        3      volatile acidity  0.776248  0.040920  0.233299
+10       4               alcohol  1.000000  0.082055  0.000000
+```
+
 
 
 ## More resources
 
-You can find our Data README [here](https://www.askiggy.com/place-data-readme) and our Data Dictionary [here](https://docs.askiggy.com/reference/data-dictionary).
+    You can find our Data Catalogue [here](https://catalog.geoiq.io/in).
 
-## Dev
-
-### Running tests
-
-Tests are located in `tests` directory and can be run as:
-
-```sh
-pipenv run python tests/test_iggy_enrich.py
-pipenv run python tests/test_local_iggy_data_package.py
-```
 
 ## Contact us
 
-For questions or issues with using this code, please [add a New Issue](https://github.com/askiggy/iggy-enrich-python/issues/new) and we'll respond as quickly as possible.
+For questions or issues with using this code, please [add a New Issue](https://github.com/geoiq-io/geoiq_automl/issues/new) and we'll respond as quickly as possible.
 
-To get access to Iggy sample data please contact us [here](https://www.askiggy.com/contact)!
+To get access to GeoIQ sample data please contact us [here](https://www.geoiq.io/contact)!
 
-If you cannot find an answer to a question in here or at any of those links, please do not hesitate to reach out to Iggy Support (support@askiggy.com).
+If you cannot find an answer to a question in here or at any of those links, please do not hesitate to reach out to GeoIQ Support (support@geoiq.io).

@@ -139,7 +139,7 @@ Use this package to prepare datasets and build models as well as deploy, monitor
 
 ## More resources
 
-You can find our AutoML FAQ Page [here](https://geoiq.io/products/no-code-ml) and our Data Cataloguie [here](https://catalog.geoiq.io/in).
+You can find our AutoML FAQ Page [here](https://geoiq.io/products/no-code-ml) and, access our Data Catalogue [here](https://catalog.geoiq.io/in).
 
     
 

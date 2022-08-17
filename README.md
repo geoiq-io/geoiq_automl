@@ -20,7 +20,8 @@ Use this package to prepare datasets and build models as well as deploy, monitor
     
     ```bash
     import geoiq_automl
-    #### AutoML object
+    
+    ## AutoML object
     result = geoiq_automl.automl('API KEY')
     ```
     

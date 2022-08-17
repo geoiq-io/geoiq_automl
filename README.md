@@ -84,11 +84,11 @@ Use this package to prepare datasets and build models as well as deploy, monitor
 <img src="https://automl.geoiq.io/static/media/train.6fddcfa4.svg" 
      width="80" 
      height="80"></p>
-
-    This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
+     
+    This package helps you to create ML model on the top of your data, and provides the model results, which can be used to interpret the model according to your business need.
 
     ```bash
-    python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
+    result.create_custom_model( dataset_id=dataset_id,model_name="test_model",model_type = "xgboost", split_ratio ="[0.7,0.3,None]")
     ```
 
 6. **Evaluate a model**<p align="left">
@@ -96,20 +96,32 @@ Use this package to prepare datasets and build models as well as deploy, monitor
      width="80" 
      height="80"></p>
 
-    This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
+   Evaluating a model is a core part of building an effective machine learning model. There are several evaluation metrics, like confusion matrix, cross-validation, AUC-ROC curve, etc. Different evaluation metrics are used for different kinds of problems.
 
     ```bash
-    python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
+    ## Model Summary
+    result.model_summary(model_id)
+    
+    ## Confusion Matrix
+    result.get_confusion_matrix(dataset_id,model_id,threshold)
+    
+    ## Lift Chart
+    result.create_lift_chart(model_id)
+    
+    ## Roc curve
+    result.create_roc_chart(model_id)
+    
+    
     ```
 7. **Prediction from a model**<p align="left">
 <img src="https://cdn-icons-png.flaticon.com/512/300/300834.png" 
      width="60" 
      height="60"></p>
 
-    This repo contains a (very small) sample csv file with the locations of twenty four 7-11 stores in Pinellas County, FL. It has `latitude` and `longitude` columns specifying the location of each store and a few additional attributes. The easiest way to enrich a file like this (with *all* the available Iggy features) is by running:
+    This repo contains .................
 
     ```bash
-    python -m iggyenrich.iggy_enrich -f ./sample_data/pinellas_711s.csv --iggy_base_loc <iggy_base_loc> --iggy_version_id <iggy_version_id> --latitude_col latitude --longitude_col longitude
+    python -m ....................
 
 
 # Example
@@ -121,7 +133,7 @@ Use this package to prepare datasets and build models as well as deploy, monitor
 
 
 
-## See [demo.ipynb](https://github.com/jingtt/varclushi/blob/master/demo.ipynb) for more details.
+## See [demo_geoiq_automl.ipynb](https://github.com/jingtt/varclushi/blob/master/deo.ipynb) for more details.
 
 
 
